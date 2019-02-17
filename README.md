@@ -1,19 +1,17 @@
-## Mavenizing MMAX2
+## Mavenized MMAX2
 
 ### General
 
-The original directory structure of the `MMAX2` source code made it
-difficult to make changes, missing an obvious way to build the source
-code. The new structure is a more standard one and allows compiling
-and packaging the source code as a single `.jar` using [Apache Maven]
+This is an attempt to convert the [MMAX2](https://github.com/nlpAThits/MMAX2)
+soruce code into a structure that allows compiling
+and packaging into a single `.jar` using [Apache Maven]
 (https://maven.apache.org/). The dependencies of the project have
 been included into the `pom.xml`, i.e., they are pulled by `Maven`
 when building or packaging the project. However, this didn't work for
-the `jakarta` tools that are used by MMAX2 for their regex
-capabilities. The library has been [deprecated since
-2010](http://jakarta.apache.org/oro/) and
-should be replaced by something more recent, but for the time being,
-it is included via a local solution.
+the [jakarta oro](http://jakarta.apache.org/oro/) tools that are used by MMAX2
+for their regex capabilities. The library has been deprecated since
+2010 and should probably be replaced by something more recent, but for the time
+being, it is included via a local dependency solution.
 
 ### Building the .jar
 
