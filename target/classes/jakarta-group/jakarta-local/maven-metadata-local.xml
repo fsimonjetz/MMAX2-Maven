@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>jakarta-group</groupId>
+  <artifactId>jakarta-local</artifactId>
+  <versioning>
+    <release>2.0.8</release>
+    <versions>
+      <version>2.0.8</version>
+    </versions>
+    <lastUpdated>20190215144038</lastUpdated>
+  </versioning>
+</metadata>
