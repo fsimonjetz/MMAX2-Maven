@@ -27,7 +27,6 @@
     </repositories>
 
     <dependencies>
-
       <dependency>
         <groupId>jakarta-group</groupId>
         <artifactId>jakarta-local</artifactId>

@@ -89,6 +89,7 @@ import org.eml.MMAX2.utils.MMAX2Constants;
 import org.eml.MMAX2.utils.MMAX2Utils;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import java.util.prefs.Preferences;
 
 public class MMAX2 extends javax.swing.JFrame implements KeyListener ,java.awt.event.ComponentListener , java.awt.event.ActionListener
 {
@@ -220,6 +221,8 @@ public class MMAX2 extends javax.swing.JFrame implements KeyListener ,java.awt.e
     private boolean blockAllInput=false;
 
     public JFrame editBasedataWindow=null;
+
+    public Preferences prefs;
 
     MMAX2AnnotationHintWindow hintWindow = null;
 
@@ -955,6 +958,8 @@ public class MMAX2 extends javax.swing.JFrame implements KeyListener ,java.awt.e
     private final void loadMMAXFile(String fileName)
     {
 
+       prefs = Preferences.userRoot().node("MMAX2").node(fileName);
+
     	boolean verbose = true;
 
     	String verboseVar = System.getProperty("verbose");
@@ -1096,7 +1101,9 @@ public class MMAX2 extends javax.swing.JFrame implements KeyListener ,java.awt.e
         arrangeWindows();
         requestRefreshDisplay();
 
-        showValidationRequestDialogWindow();
+        if (prefs.getBoolean("askValidation", true)) {
+          showValidationRequestDialogWindow();
+        }
 
         hintWindow = new MMAX2AnnotationHintWindow();
 
@@ -1172,21 +1179,33 @@ public class MMAX2 extends javax.swing.JFrame implements KeyListener ,java.awt.e
         }
     }
 
-    private final void showValidationRequestDialogWindow()
-    {
+    private final void showValidationRequestDialogWindow() {
+
         String message = "Do you want to validate the annotations now?\n";
         message = message + "It is recommended to validate annotations once after initial creation,\n";
         message = message + "and after each MMAX-external modification.\n";
         message = message + "Validation will check initial data consistency. It will also set default\n";
         message = message + "values for all attributes, so the annotations should be saved afterwards!\n";
         message = message + "\nWhat do you want to do?\n";// If in doubt, use 'Do not validate'!\n";
+
+        JCheckBox checkbox = new JCheckBox("Do not show this message again.");
+        Object[] components = {message, checkbox};
         Object[] options = { "Do not validate", "Validate now"};
-        int result = JOptionPane.showOptionDialog(null, message, "MMAX2: Annotation validation prompt", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,null, options, options[0]);
+
+        int result = JOptionPane.showOptionDialog(null, components, "MMAX2: Annotation validation prompt", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,null, options, options[0]);
 
         if (result == 1)
         {
             getCurrentDiscourse().getCurrentMarkableChart().validateAll();
         }
+
+        if (checkbox.isSelected()) {
+
+          prefs.putBoolean("askValidation", false);
+
+
+        }
+
     }
 
     private final void createMenu()
@@ -1774,6 +1793,7 @@ public class MMAX2 extends javax.swing.JFrame implements KeyListener ,java.awt.e
             plugin.callPlugin(getCurrentDiscourse(),attributes, getIsBatchPluginMode());
         }
     }
+
 
     private final void initPluginMenu()
     {
